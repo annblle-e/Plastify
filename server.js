@@ -2,7 +2,7 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const axios = require('axios');
 const app = express();
-const port = 3040;
+const PORT = process.env.PORT || 3040;
 require('dotenv').config();  // At the top of your server.js file
 // Middleware untuk melayani file statis
 app.use(express.static('public'));
