@@ -124,6 +124,13 @@ app.post('/v1/chat/completions', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.get('/ai.html', (req, res) => {
+    res.sendFile(__dirname + '/public/ai.html');
+});
+
+app.get('/server.html', (req, res) => {
+    res.sendFile(__dirname + '/public/server.html');
+});
 
 // Start server
 app.listen(port, () => {
