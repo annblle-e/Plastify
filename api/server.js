@@ -135,7 +135,6 @@ app.get('/index.html', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-// Start server
 module.exports = (req, res) => {
     app(req, res);
 };
