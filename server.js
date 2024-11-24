@@ -3,11 +3,7 @@ const puppeteer = require('puppeteer');
 const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
-require('dotenv').config();
-const cors = require('cors');
-app.use(cors());
-
-
+require('dotenv').config();  // At the top of your server.js file
 // Middleware untuk melayani file statis
 app.use(express.static('public'));
 
@@ -25,7 +21,7 @@ app.get('/search', async (req, res) => {
         // Meluncurkan Puppeteer dan membuka browser
         const browser = await puppeteer.launch({
             headless: true,
-            args: ['--disable-http2']
+            args: ['--disable-http2']  // Menonaktifkan HTTP/2
         });
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
@@ -38,11 +34,11 @@ app.get('/search', async (req, res) => {
         await page.evaluate(async () => {
             let lastHeight = document.body.scrollHeight;
             let scrollCount = 0;
-            let scrollLimit = 10;  // Batasi scroll hingga 10 kali
+            let scrollLimit = 10;  // Batasi scroll hingga 10 kali, bisa ditambah jika produk masih kurang
 
             while (scrollCount < scrollLimit) {
                 window.scrollTo(0, document.body.scrollHeight);
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Tunggu 3 detik
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Tunggu 3 detik untuk memuat lebih banyak produk
                 let newHeight = document.body.scrollHeight;
                 if (newHeight === lastHeight) break;  // Jika tidak ada perubahan, hentikan scroll
                 lastHeight = newHeight;
@@ -55,13 +51,13 @@ app.get('/search', async (req, res) => {
 
         // Ambil data produk
         const products = await page.evaluate(() => {
-            const placeholderImage = 'https://assets.tokopedia.net/assets-tokopedia-lite/v2/zeus/kratos/85cc883d.svg';
+            const placeholderImage = 'https://assets.tokopedia.net/assets-tokopedia-lite/v2/zeus/kratos/85cc883d.svg'; // Gambar placeholder yang dihindari
             const productElements = document.querySelectorAll('div[data-testid="divProductWrapper"]');
             const products = [];
         
             productElements.forEach((element) => {
                 let name = element.querySelector('a')?.innerText || "No Name";
-                let priceText = element.querySelector('span[class*="css-1k7y5tq"]')?.innerText || element.querySelector('span[class*="css-1ks6sb"]')?.innerText || "No Price"; // Mengambil harga
+                let priceText = element.querySelector('span[class*="css-1k7y5tq"]')?.innerText || element.querySelector('span[class*="css-1ks6sb"]')?.innerText || "No Price"; // Mengambil harga dari berbagai elemen
                 const image = element.querySelector('img')?.src || "No Image";
                 let link = element.querySelector('a')?.href || "No Link";
         
@@ -76,13 +72,14 @@ app.get('/search', async (req, res) => {
                     name = name.replace(priceMatch[0], '').trim();
                 }
         
-                // Filter produk dengan gambar placeholder
+                // Filter untuk menghindari produk dengan gambar placeholder
                 if (image !== placeholderImage && name && price && link) {
                     products.push({ name, price, image, link });
                 }
             });
             return products;
         });
+        
 
         await browser.close();
 
@@ -92,14 +89,16 @@ app.get('/search', async (req, res) => {
         res.status(500).send(`Error scraping data: ${error.message}`);
     }
 });
-
-// API for chat completions
 app.use(express.json());
 app.post('/v1/chat/completions', async (req, res) => {
     try {
         const data = req.body;
-        const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY';
+        console.log(data); // Log incoming request body
 
+        // Replace this with your new free API key
+        const OPENAI_API_KEY = 'sk-Sn8epIaPtpPVIXzt8d1071A99eBc4c5aB73d9e3e9dD78218'; // Your API key
+
+        // Process the request with the new API endpoint
         const response = await fetch('https://free.v36.cm/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -113,28 +112,27 @@ app.post('/v1/chat/completions', async (req, res) => {
         });
 
         if (!response.ok) {
-            const errorDetails = await response.text();
+            const errorDetails = await response.text(); // Capture detailed error
+            console.error('Error details:', errorDetails);
             throw new Error('Network response was not ok');
         }
 
         const result = await response.json();
-        res.json(result);
+        res.json(result); // Send back the response
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error); // Log the error
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-// Serving ai.html
 app.get('/ai.html', (req, res) => {
     res.sendFile(__dirname + '/public/ai.html');
 });
 
-// Serving index.html
 app.get('/index.html', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-module.exports = (req, res) => {
-    app(req, res);
-};
+// Start server
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
