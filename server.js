@@ -3,6 +3,8 @@ const puppeteer = require('puppeteer');
 const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
+const fetch = require('node-fetch');
+
 require('dotenv').config();  // At the top of your server.js file
 // Middleware untuk melayani file statis
 app.use(express.static('public'));
@@ -21,8 +23,9 @@ app.get('/search', async (req, res) => {
         // Meluncurkan Puppeteer dan membuka browser
         const browser = await puppeteer.launch({
             headless: true,
-            args: ['--disable-http2']  // Menonaktifkan HTTP/2
+            args: ['--no-sandbox', '--disable-setuid-sandbox']  // Crucial for production environments
         });
+        
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
         await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -128,8 +131,8 @@ app.get('/ai.html', (req, res) => {
     res.sendFile(__dirname + '/public/ai.html');
 });
 
-app.get('/server.html', (req, res) => {
-    res.sendFile(__dirname + '/public/server.html');
+app.get('/index.html', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 // Start server
