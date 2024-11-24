@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastify</title>
+    <!-- Importing Poppins font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Poppins+Black&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            z-index: 999;
+        }
+
+        .navbar a {
+            color: #333;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s ease, color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #3498db;
+            transform: scale(1.1);
+        }
+
+        /* Search Bar */
+        #searchContainer {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 50px;
+            transition: transform 0.5s ease;
+            margin-bottom: 20px;
+            
+        }
+
+        #searchQuery {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            border-radius: 20px;
+            border: 2px solid #ddd;
+            margin-right: 10px;
+            transition: width 0.3s, box-shadow 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #searchQuery:focus {
+            width: 350px;
+            box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Product Card */
+        .product-card {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            padding: 10px;
+            background-color: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-radius: 8px;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: popup 0.5s forwards;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tombolbli {
+            font-size: large;
+        }
+
+        @keyframes popup {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Hover effect */
+        .product-card:hover {
+            transform: scale(1.1); /* Grow card on hover */
+        }
+
+        .product-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .product-card h3 {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .product-card a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Loading Text */
+        .loading-text {
+            display: none;
+            position: fixed;
+            top: calc(50% + 40px);
+            left: 50%;
+            transform: translate(-50%, 0);
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            text-align: center;
+        }
+
+        /* Error Message */
+        #errorMessage {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #1d1d1d;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+        h1 {
+            color: green;
+        }
+
+        /* Transparency effect for cards */
+        .product-card.transparent {
+            opacity: 0.3;
+            pointer-events: none; /* Disable interaction */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">Eco Shop</a>
+        <a href="ai.html">Replastify AI</a>
+        <a href="about.html">About</a>
+    </div>
+
+    <h1>Replastify - Eco Shop</h1>
+
+    <!-- Search Bar and Button -->
+    <div id="searchContainer">
+        <input type="text" id="searchQuery" placeholder="Cari di Plastify">
+        <button onclick="searchProducts()">Search</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading"></div>
+    <div id="loadingText" class="loading-text">maap lama.. 🥺</div>
+
+    <!-- Error Message -->
+    <div id="errorMessage">Tidak dapat menemukan produk/server error! 😥</div>
+
+    <!-- Product List -->
+    <div id="productList"></div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+   <footer style="width: 100%; padding: 20px; background-color: #333; color: white; text-align: center; margin-top: auto;">
+       <p>&copy; 2024 Replastify - Kelompok P5 Tukang Sapu 🧹</p>
+       <p>Sandra 28 | Abel 02 | Tristan 32</p>
+   </footer>
+   
+
+    <script>
+      
+
+        // Function to reset the search bar back to top after search
+        async function searchProducts() {
+            const query = document.getElementById("searchQuery").value;
+            if (!query) return;
+
+            const loadingElement = document.getElementById("loading");
+            const loadingTextElement = document.getElementById("loadingText");
+            const errorMessageElement = document.getElementById("errorMessage");
+
+            // Show loading animation
+            loadingElement.style.display = 'block';
+
+            // Show loading text after 5 seconds
+            const loadingTimeout = setTimeout(() => {
+                
+            }, 5000);
+
+            // Hide the product cards while fetching results
+            const productList = document.getElementById("productList");
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => card.classList.add('transparent'));
+
+            try {
+                // Fetch data from the server
+                const response = await fetch(`/search?keyword=${query}`);
+                const products = await response.json();
+
+                // Hide loading animation and text
+                loadingElement.style.display = 'none';
+                loadingTextElement.style.display = 'none';
+                clearTimeout(loadingTimeout);
+
+                // Clear previous results
+                productList.innerHTML = '';
+
+                if (products.length === 0) {
+                    // Show error message if no products are found
+                    errorMessageElement.style.display = 'block';
+                } else {
+                    // Hide error message if products are found
+                    errorMessageElement.style.display = 'none';
+
+                    // Create product cards
+                    products.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.classList.add('product-card');
+
+                        productCard.innerHTML = `
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.price}</p>
+                            <a href="${product.link}" target="_blank" class="tombolbli">BELI</a>
+                        `;
+
+                        productList.appendChild(productCard);
+                    });
+                }
+
+            } catch (error) {
+                console.error("Error fetching products:", error);
+
+                // Hide loading animation and text
+                loadingElement.style.display = 'none';
+                loadingTextElement.style.display = 'none';
+                clearTimeout(loadingTimeout);
+
+                // Show error message on fetch failure
+                errorMessageElement.style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>

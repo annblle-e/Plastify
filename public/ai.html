@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastify - AI Waste Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            z-index: 999;
+        }
+
+        .navbar a {
+            color: #333;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s ease, color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #3498db;
+            transform: scale(1.1);
+        }
+
+        /* Disabled Button Style */
+        #submitButton:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Input Section */
+        #inputSection {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        #wasteInput {
+            width: 300px;
+            height: 150px;
+            font-size: 16px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            resize: none;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.5s ease; /* Smooth transition */
+        }
+
+        #submitButton {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 20px;
+        }
+
+        #submitButton:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        #submitButton:active {
+            transform: scale(0.95);
+        }
+
+        /* Result Section */
+        #resultSection {
+            display: none;
+            margin-top: 30px;
+            font-size: 18px;
+            color: #555;
+            text-align: center;
+        }
+
+        #resultText {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+
+        /* Disabled Button Style */
+#submitButton:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    pointer-events: none; /* Disables hover and click animations */
+}
+
+/* Optional: Disable hover effect completely when disabled */
+#submitButton:disabled:hover {
+    background-color: #bdc3c7; /* Keeps the same color when hovered */
+}
+
+
+        /* Error Message */
+        #errorMessage {
+            display: none;
+            font-size: 20px;
+            color: red;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2980b9;
+        }
+
+        /* Media Query for Mobile Devices */
+/* Media Query for Mobile Devices */
+
+
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">Eco Shop</a>
+        <a href="ai.html">Replastify AI</a>
+        <a href="about.html">About</a>
+    </div>
+
+    <h1>Replastify - AI Waste Analysis</h1>
+
+    <!-- Input Section -->
+    <div id="inputSection">
+        <textarea id="wasteInput" placeholder="Tuliskan daftar sampah yang kamu miliki saat ini (contoh : botol plastik, kantong plastik, dll)"></textarea>
+        <br>
+        <button id="submitButton" onclick="submitWasteData()" disabled>Kirim Daftar Sampah</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading"></div>
+
+    <!-- Result Section -->
+    <div id="resultSection">
+        <p id="resultText"></p>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage">Terjadi kesalahan saat mengirim data! 😥</div>
+<!-- Footer Section -->
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+<footer style="width: 100%; padding: 20px; background-color: #333; color: white; text-align: center; margin-top: auto;">
+    <p>&copy; 2024 Replastify - Kelompok P5 Tukang Sapu 🧹</p>
+    <p>Sandra 28 | Abel 02 | Tristan 32</p>
+</footer>
+
+
+    <!-- JavaScript -->
+    <script>
+        async function submitWasteData() {
+    const loading = document.getElementById('loading');
+    const wasteInputElement = document.getElementById('wasteInput');
+    const submitButton = document.getElementById('submitButton');
+    const wasteInput = wasteInputElement.value;
+    const resultSection = document.getElementById('resultSection');
+
+    // Disable submit button while processing
+    submitButton.disabled = true;
+
+    // Show loading spinner and hide result section initially
+    loading.style.display = 'block';
+    resultSection.style.display = 'none';
+
+    try {
+        const response = await fetch('http://localhost:3040/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: [{ role: 'user', content: `ini adalah list sampah yang ku punya: ${wasteInput}. beri tau aku mereka bisa ubah menjadi prakarya apa, beserta langkah-langkah.` }]
+            })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+
+        // Update the text area with the result
+        wasteInputElement.value = `${data.choices[0].message.content}`;
+
+        // Change the size of the textarea with a smooth animation
+ // Update textarea size only if not on mobile
+if (window.innerWidth > 768) {
+    wasteInputElement.style.width = '500px';
+    wasteInputElement.style.height = '350px';
+}
+
+
+        // Show the result section
+        resultSection.style.display = 'block';
+    } catch (error) {
+        // Display error message
+        wasteInputElement.value = "Terjadi kesalahan saat mengirim data! 😥";
+        console.error('Error:', error);
+    } finally {
+        // Hide loading spinner
+        loading.style.display = 'none';
+    }
+}
+
+// Reset the textarea size when cleared and enable submit button
+document.getElementById('wasteInput').addEventListener('input', function() {
+    const submitButton = document.getElementById('submitButton');
+    if (this.value === '') {
+        this.style.width = '300px'; // default width
+        this.style.height = '150px'; // default height
+        submitButton.disabled = true; // Disable submit when empty
+    } else {
+        submitButton.disabled = false; // Enable submit when not empty
+    }
+});
+
+// Enable submit button after result is cleared
+document.getElementById('resultText').addEventListener('input', function() {
+    const submitButton = document.getElementById('submitButton');
+    if (this.value === '') {
+        submitButton.disabled = false; // Enable submit after clearing result
+    }
+});
+    </script>
+
+</body>
+</html>

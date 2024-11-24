@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plastify</title>
+    <!-- Importing Poppins font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Poppins+Black&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            z-index: 999;
+        }
+
+        .navbar a {
+            color: #333;
+            font-size: 18px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s ease, color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #3498db;
+            transform: scale(1.1);
+        }
+
+        /* Hero Title */
+        h1 {
+            color: #8e44ad;
+            margin-top: 35px;
+            font-size: 36px;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        /* Container Styling */
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: slideUp 1s ease-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .highlight {
+            margin-top: -20px;
+            margin-bottom: -10px;
+            color: #27ae60;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        /* Button Styling */
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        /* Footer Styling */
+        footer {
+            width: 100%;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            margin-top: auto;
+            font-size: 14px;
+        }
+
+        footer p {
+            margin: 5px 0;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="index.html">Eco Shop</a>
+        <a href="ai.html">Replastify AI</a>
+        <a href="about.html">About</a>
+    </div>
+
+    <!-- Hero Section -->
+    <h1>Replastify - About</h1>
+
+    <!-- Container -->
+    <div class="container">
+        <p>HAIII, kami dari kelompok</p>
+        <h6 class="highlight">Tukang Sapu 🧹!</h6><p>Berterima kasih kepada Anda karena sudah mengunjungi website kami!</p>
+        <img src="https://i.pinimg.com/originals/ca/6c/74/ca6c744333366d89b3824449cb844c2e.gif" alt="Replastify Gif">
+        
+
+        <p>Apa manfaat yang bisa didapat dari memakai web ini? Tentunya ada banyak sekali! Salah satunya adalah mengurangi sampah plastik di lingkungan sekitar. Sampah plastik adalah barang bekas atau tidak terpakai yang terbuat dari bahan kimia tak terbarukan, seperti minyak, gas alam, dan batu bara. Sampah plastik merupakan salah satu jenis sampah yang berbahaya bagi lingkungan karena sulit terurai oleh proses alam.</p>
+
+        <p>Dampak negatif dari sampah plastik sangat banyak, seperti pencemaran lingkungan, pencemaran air, pencemaran udara, dan pencemaran makanan.</p>
+
+        <p>Manfaat mengurangi plastik antara lain melestarikan SDA, mengurangi polusi, menghemat energi, dan menghemat ruang TPA.</p>
+
+        <p>Dengan begitu, kami berharap website yang kami buat ini dapat membantu mengurangi penggunaan sampah plastik.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p class="foot">&copy; 2024 Replastify - Kelompok P5 Tukang Sapu 🧹</p>
+        <p class="foot">Sandra 28 | Abel 02 | Tristan 32</p>
+    </footer>
+
+</body>
+</html>
