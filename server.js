@@ -3,8 +3,6 @@ const puppeteer = require('puppeteer');
 const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 3000;
-const fetch = require('node-fetch');
-
 require('dotenv').config();  // At the top of your server.js file
 // Middleware untuk melayani file statis
 app.use(express.static('public'));
